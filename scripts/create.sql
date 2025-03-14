@@ -1,4 +1,8 @@
-CREATE TABLE Artists (
+
+CREATE SCHEMA IF NOT EXISTS proj;
+SET search_path TO proj;
+
+CREATE TABLE IF NOT EXISTS Artists (
     artist_id       SERIAL PRIMARY KEY,
     name            VARCHAR(100) NOT NULL,
     main_genre      VARCHAR(100),
@@ -6,7 +10,7 @@ CREATE TABLE Artists (
     email           VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Venues (
+CREATE TABLE IF NOT EXISTS Venues (
     venue_id        SERIAL PRIMARY KEY,
     venue_name      VARCHAR(100) NOT NULL,
     address         VARCHAR(100) NOT NULL,
@@ -14,7 +18,7 @@ CREATE TABLE Venues (
     email           VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Events (
+CREATE TABLE IF NOT EXISTS Events (
     event_id        SERIAL PRIMARY KEY,
     event_name      VARCHAR(100) NOT NULL,
     event_date      TIMESTAMP NOT NULL,
@@ -27,17 +31,17 @@ CREATE TABLE Events (
         FOREIGN KEY (artist_id) REFERENCES Artists(artist_id)
 );
 
-CREATE TABLE Customers (
-    customer_id     SERIAL PRIMARY KEY,
-    first_name      VARCHAR(100) NOT NULL,
-    last_name       VARCHAR(100) NOT NULL,
-    email           VARCHAR(100) UNIQUE NOT NULL,
-    phone           VARCHAR(20) UNIQUE NOT NULL,
+CREATE TABLE IF NOT EXISTS Customers (
+    customer_id      SERIAL PRIMARY KEY,
+    first_name       VARCHAR(100) NOT NULL,
+    last_name        VARCHAR(100) NOT NULL,
+    email            VARCHAR(100) UNIQUE NOT NULL,
+    phone            VARCHAR(20) UNIQUE NOT NULL,
     registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
-CREATE TABLE Tickets (
+CREATE TABLE IF NOT EXISTS Tickets (
     ticket_id           SERIAL PRIMARY KEY,
     event_id            INTEGER NOT NULL,
     customer_id         INTEGER,
