@@ -44,13 +44,13 @@ PostgreSQL 15, Git, Python
 
 - **artist_id** – SERIAL PRIMARY KEY  
   Уникальный идентификатор артиста.
-- **name** – VARCHAR(100) NOT NULL  
+- **name** – VARCHAR(20) NOT NULL  
   Название группы или имя исполнителя.
-- **main_genre** – VARCHAR(100)  
+- **main_genre** – VARCHAR(20)  
   Основной музыкальный жанр.
-- **phone_number** – VARCHAR(20) NOT NULL  
+- **phone_number** – VARCHAR(20) NOT NULL CHECK (phone_number ~ '^\+[0-9]{7,15}$')  
   Контактный номер для связи с менеджером.
-- **email** – VARCHAR(100) NOT NULL  
+- **email** – VARCHAR(50) NOT NULL CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')  
   Электронная почта для связи с менеджером.
 
 ---
@@ -70,7 +70,7 @@ PostgreSQL 15, Git, Python
   Дата и время проведения события.
 - **venue_id** – INTEGER NOT NULL  
   Внешний ключ, ссылающийся на таблицу Venues.
-- **age_restriction** – INTEGER  
+- **age_restriction** – INTEGER CHECK (age_restriction >= 0)  
   Возрастное ограничение для посещения события (например, 18+).
 - **artist_id** – INTEGER NOT NULL  
   Внешний ключ, ссылающийся на таблицу Artists (указывает на основного артиста, выступающего на событии).
@@ -86,13 +86,13 @@ PostgreSQL 15, Git, Python
 
 - **venue_id** – SERIAL PRIMARY KEY  
   Уникальный идентификатор площадки.
-- **venue_name** – VARCHAR(100) NOT NULL  
+- **venue_name** – VARCHAR(50) NOT NULL  
   Название площадки (например, «Главная сцена», «Открытая площадка»).
-- **address** – VARCHAR(100) NOT NULL  
+- **address** – VARCHAR(100) NOT NULL
   Физический адрес площадки.
-- **capacity** – INTEGER  
+- **capacity** – INTEGER CHECK (capacity > 0)  
   Вместимость площадки (количество мест).
-- **email** – VARCHAR(100) NOT NULL  
+- **email** – VARCHAR(50) NOT NULL CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')  
   Электронная почта для связи с представителями площадки.
 
 ---
@@ -109,16 +109,16 @@ PostgreSQL 15, Git, Python
   Внешний ключ, ссылающийся на таблицу Customers (может быть NULL, если билет ещё не продан).
 - **purchase_date** – TIMESTAMP  
   Дата и время покупки билета. Если билет не продан, значение может быть NULL.
-- **price** – INTEGER NOT NULL  
+- **price** – INTEGER NOT NULL CHECK (price >= 0)  
   Текущая цена билета.
 - **previous_price** – INTEGER  
   Предыдущая цена билета _(SCD Type 3)_.
-- **ticket_type** – VARCHAR(100)  
+- **ticket_type** – VARCHAR(50)  
   Вид билета. Возможные значения:
   - **standart** – базовый билет (цена равна стандартной цене).
   - **standart+** – расширенный вариант базового билета с дополнительными преимуществами (например, ускоренный вход).
   - **premium** – билет с дополнительными фичами (например, VIP-место, доступ в зону бэкстейдж).
-- **seat_number** – INTEGER  
+- **seat_number** – INTEGER CHECK (seat_number >= 0)  
   Номер места.
 
 _Реализация SCD Type 3:_  
@@ -135,13 +135,13 @@ _Реализация SCD Type 3:_
 
 - **customer_id** – SERIAL PRIMARY KEY  
   Уникальный идентификатор клиента.
-- **first_name** – VARCHAR(100) NOT NULL  
+- **first_name** – VARCHAR(20) NOT NULL  
   Имя покупателя.
-- **last_name** – VARCHAR(100) NOT NULL  
+- **last_name** – VARCHAR(20) NOT NULL  
   Фамилия покупателя.
-- **email** – VARCHAR(100) UNIQUE NOT NULL  
+- **email** – VARCHAR(50) UNIQUE NOT NULL CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$')  
   Электронная почта для связи.
-- **phone** – VARCHAR(20) UNIQUE NOT NULL  
+- **phone** – VARCHAR(20) UNIQUE NOT NULL CHECK (phone ~ '^\+[0-9]{7,15}$')  
   Контактный телефон.
 - **registration_date** – TIMESTAMP DEFAULT CURRENT_TIMESTAMP  
   Дата регистрации или первого заказа.
