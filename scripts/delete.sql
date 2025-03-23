@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS
   proj.Customers, 
   proj.Events, 
   proj.Venues, 
-  proj.Artists 
-CASCADE;
+  proj.Artists;
 
 DROP SCHEMA IF EXISTS proj CASCADE;
