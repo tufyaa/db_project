@@ -7,9 +7,8 @@ from
 	artists a
 	join events e on
 		a.artist_id = e.artist_id
-	group by
-		a.artist_id,
-		a.name
+group by
+	a.name
 order by
 	events_count desc
 limit 5;

@@ -19,9 +19,9 @@ from
 		c.customer_id,
 		c.first_name,
 		c.last_name
-	) as sub
+	)
 where
-	sub.total_spent > 
+	total_spent > 
 	(
 		select
 			AVG(customer_total)
@@ -31,7 +31,7 @@ where
 				SUM(t.price) as customer_total
 			from
 				customers c
-			join tickets t on
+				join tickets t on
 				c.customer_id = t.customer_id
 			group by
 				c.customer_id

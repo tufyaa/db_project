@@ -18,10 +18,7 @@ with cte as (
 			e.artist_id = a.artist_id
 	group by
 		c.customer_id,
-		c.first_name,
-		c.last_name,
-		a.artist_id,
-		a.name
+		a.artist_id
 )
 select
 	first_name,

@@ -8,10 +8,10 @@ from
 	customers c
 	join tickets t on
 			c.customer_id = t.customer_id
-	where
-			extract(year from t.purchase_date) = 2024
-	group by
-		c.customer_id
+where
+		extract(year from t.purchase_date) = 2024
+group by
+	c.customer_id
 order by
 	total_spent desc;
 
