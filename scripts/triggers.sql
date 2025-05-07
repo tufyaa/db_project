@@ -25,23 +25,20 @@ DECLARE
   v_seat       INT;
 BEGIN
   IF NEW.seat_number IS NULL THEN
-    -- берём вместимость площадки
     SELECT capacity INTO v_capacity
-      FROM venues v
-      JOIN events  e ON v.venue_id = e.venue_id
+      FROM proj.venues v
+      JOIN proj.events  e ON v.venue_id = e.venue_id
      WHERE e.event_id = NEW.event_id;
 
-    -- ищем первое свободное место от 1 до capacity
-    FOR v_seat IN 1..v_capacity LOOP
-      PERFORM 1
-        FROM tickets
-       WHERE event_id   = NEW.event_id
-         AND seat_number = v_seat;
-      IF NOT FOUND THEN
-        NEW.seat_number := v_seat;
-        EXIT;
-      END IF;
-    END LOOP;
+    SELECT seat
+    INTO NEW.seat_number
+    FROM generate_series(1, v_capacity) AS seat
+    WHERE seat NOT IN (
+        SELECT seat_number
+        FROM proj.tickets
+        WHERE event_id = NEW.event_id
+    )
+    LIMIT 1;
   END IF;
   RETURN NEW;
 END;
@@ -54,7 +51,6 @@ CREATE TRIGGER trg_assign_seat
 
 
 -- 3) Проверка даты покупки
--- purchase_date < event_date и > customer.registration_date
 CREATE OR REPLACE FUNCTION trg_fn_validate_purchase_date()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -62,12 +58,10 @@ DECLARE
   v_reg_date   TIMESTAMP;
 BEGIN
   IF NEW.purchase_date IS NOT NULL THEN
-    -- дата мероприятия
     SELECT event_date INTO v_event_date
       FROM events
      WHERE event_id = NEW.event_id;
 
-    -- дата регистрации клиента
     SELECT registration_date INTO v_reg_date
       FROM customers
      WHERE customer_id = NEW.customer_id;

@@ -1,23 +1,21 @@
--- View 2: Ticket_Sales_Summary
 -- Статистика по продажам билетов для каждого события:
 
 CREATE OR REPLACE VIEW ticket_sales_summary AS
 SELECT
     e.event_id,
     e.event_name,
-    COUNT(t.ticket_id) FILTER (WHERE t.customer_id IS NOT NULL)    AS tickets_sold,
-    SUM(t.price)    FILTER (WHERE t.customer_id IS NOT NULL)       AS total_revenue,
-    AVG(t.price)    FILTER (WHERE t.customer_id IS NOT NULL)       AS avg_price
+    COUNT(t.ticket_id) AS tickets_sold,
+    SUM(t.price) AS total_revenue,
+    AVG(t.price) AS avg_price
 FROM
-    events e
-    LEFT JOIN tickets t ON e.event_id = t.event_id
+    proj.events e
+    LEFT JOIN proj.tickets t ON e.event_id = t.event_id AND t.customer_id IS NOT NULL
 GROUP BY
     e.event_id,
     e.event_name
-HAVING
-    COUNT(t.ticket_id) FILTER (WHERE t.customer_id IS NOT NULL) > 0
 ORDER BY
     total_revenue DESC;
+
 
 
 /*

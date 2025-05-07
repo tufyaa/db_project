@@ -1,7 +1,7 @@
 -- Процедура 1: purchase_ticket
 -- Проверяет, что билет существует и не продан.
 -- Обновляет previous_price = price.
--- Устанавливает новую цену (можно здесь добавить логику динамического ценообразования).
+-- Устанавливает новую цену.
 
 CREATE OR REPLACE PROCEDURE purchase_ticket(p_ticket_id INT,p_new_price INT)
 LANGUAGE plpgsql AS
@@ -18,8 +18,8 @@ BEGIN
 
     UPDATE tickets
        SET previous_price = v_current_price,
-           price          = p_new_price,
-           purchase_date  = NOW()
+           price = p_new_price,
+           purchase_date = NOW()
      WHERE ticket_id = p_ticket_id;
 END;
 $$;

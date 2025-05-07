@@ -1,5 +1,4 @@
--- View 1: Upcoming_Events
---   Показывает все грядущие события (event_date > NOW()).
+--   Показывает все будущие события
 
 CREATE OR REPLACE VIEW upcoming_events AS
 SELECT
@@ -9,9 +8,9 @@ SELECT
     v.venue_name,
     a.name AS artist_name
 FROM
-    events e
-    JOIN venues v  ON e.venue_id  = v.venue_id
-    JOIN artists a ON e.artist_id = a.artist_id
+    proj.events e
+    JOIN proj.venues v  ON e.venue_id  = v.venue_id
+    JOIN proj.artists a ON e.artist_id = a.artist_id
 WHERE
     e.event_date > NOW()
 ORDER BY
